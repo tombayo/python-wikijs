@@ -38,7 +38,10 @@ class WikiJs(AssetMixin, PageMixin, SystemMixin, UserMixin):
         try:
             return self.client.execute(gql(query), variable_values=params)
         except GraphQLError as e:
-            raise ClientError(e.message) from None
+            try:
+                raise_exc(e.code, e.message)
+            except KeyError:
+                raise ClientError(e.message) from None
         except TransportQueryError as e:
             raise ClientError(e.errors) from None
 
