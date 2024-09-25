@@ -8,3 +8,4 @@ build/
 .venv/
 dist/
 docs/
+dummy.py

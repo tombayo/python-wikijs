@@ -7,8 +7,9 @@ from gql import gql, Client
 from gql.transport.aiohttp import AIOHTTPTransport
 from gql.transport.exceptions import TransportQueryError
 from graphql.error.graphql_error import GraphQLError
+from graphql.execution.execute import ExecutionResult
 
-from .exceptions import ClientError, raise_exc
+from .exceptions import ClientError, raise_exc, WikiJsException
 
 from .asset import AssetMixin
 from .page import PageMixin
@@ -33,19 +34,24 @@ class WikiJs(AssetMixin, PageMixin, SystemMixin, UserMixin):
         transport = AIOHTTPTransport(url=self.endpoint, headers=headers)
         return Client(transport=transport, fetch_schema_from_transport=self.schema_fetch)
 
-    def execute(self, query: str, params: 'Optional[Dict[str, Any]]' = None) -> Any:
+    def execute(self, query: str, params: 'Optional[Dict[str, Any]]' = None) -> ExecutionResult:
         log.debug('Query: %s / Params: %s', query, params)
         try:
             return self.client.execute(gql(query), variable_values=params)
-        except GraphQLError as e:
+        except TransportQueryError as gql_err:
             try:
-                raise_exc(e.code, e.message)
+                err = gql_err.errors[0]  # Only care about the first error (unlikely multiple)
+                raise_exc(err['extensions']['exception']['code'], err['message'])
             except KeyError:
-                raise ClientError(e.message) from None
-        except TransportQueryError as e:
-            raise ClientError(e.errors) from None
+                # This error is not related to Wiki.js, and we'll re-raise as a client error
+                raise ClientError from gql_err
+            except WikiJsException as js_err:
+                # This error is related to Wiki.js, 
+                # let it bubble up with it's specific type to be handled elsewhere.
+                raise js_err from None
 
     def check_response_result(self, result: 'Dict[str, Any]') -> bool:
+        """TODO: This function might be unecessary"""
         if not result['succeeded']:
             raise_exc(result['errorCode'], result['message'])
         return True
