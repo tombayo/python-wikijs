@@ -60,11 +60,12 @@ class SystemImportUsersGroupMode(StrEnum):
 if TYPE_CHECKING:
     from typing import Any, Dict, Optional
     from gql import Client
+    from graphql.execution.execute import ExecutionResult
 
     class WikiJsProtocol(Protocol):
         @property
         def client(self) -> Client: ...
-        def execute(self, query: str, params: 'Optional[Dict[str, Any]]' = None) -> Any: ...
+        def execute(self, query: str, params: 'Optional[Dict[str, Any]]' = None) -> ExecutionResult: ...
         def check_response_result(self, result: 'Dict[str, Any]') -> bool: ...
 
 else:
