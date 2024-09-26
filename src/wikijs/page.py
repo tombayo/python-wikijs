@@ -90,6 +90,23 @@ class PageMixin(WikiJsProtocol):
         resp = self.execute(query, params)['pages']['single']
         resp['tags'] = [t['tag'] for t in resp['tags']]
         return resp
+    
+    def fetch_page_by_path(self, path: str, locale: str) -> 'Dict[str, Any]':
+        query = '''
+            query PageQuery($path: String!, $locale: String!) {
+                pages {
+                    singleByPath (
+                        path: $path
+                        locale: $locale
+                    ) {
+                        %s
+                    }
+                }
+            }''' % PAGE_FIELDS
+        params = dict(path=str(path),locale=str(locale))
+        resp = self.execute(query, params)['pages']['singleByPath']
+        resp['tags'] = [t['tag'] for t in resp['tags']]
+        return resp
 # endregion
 
 # region PAGE MUTATION
