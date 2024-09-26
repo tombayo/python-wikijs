@@ -11,7 +11,7 @@ class UserMixin(WikiJsProtocol):
     def list_users(
         self,
         filter:   'Optional[str]' = None,
-        order_by: 'Optional[str]' = None,
+        orderBy: 'Optional[str]' = None,
     ) -> 'List[Dict[str, Any]]':
         query = '''
             query User(
@@ -29,7 +29,7 @@ class UserMixin(WikiJsProtocol):
             }
         '''
 
-        params = dict(filter=filter, orderBy=order_by)
+        params = dict(filter=filter, orderBy=orderBy)
 
         return self.execute(query, params)['users']['list']
 

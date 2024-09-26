@@ -61,17 +61,17 @@ class PageMixin(WikiJsProtocol):
     def list_pages(
         self,
         limit:      'Optional[int]' = None,
-        order_by:   'Optional[PageOrderBy]' = None,
+        orderBy:    'Optional[PageOrderBy]' = None,
         direction:  'Optional[PageOrderByDirection]' = None,
         tags:       'Optional[List[str]]' = None,
         locale:     'Optional[str]' = None,
-        creator_id: 'Optional[int]' = None,
-        author_id:  'Optional[int]' = None,
+        creatorId:  'Optional[int]' = None,
+        authorId:   'Optional[int]' = None,
     ) -> Any:
         query = '''
         '''
-        params = dict(limit=limit, orderBy=order_by, orderByDirection=direction,
-                      tags=tags, locale=locale, creatorId=creator_id, authorId=author_id)
+        params = dict(limit=limit, orderBy=orderBy, orderByDirection=direction,
+                      tags=tags, locale=locale, creatorId=creatorId, authorId=authorId)
         raise NotImplementedError
 
     def fetch_page(self, id: int) -> 'Dict[str, Any]':
@@ -116,14 +116,14 @@ class PageMixin(WikiJsProtocol):
         content:            str,
         description:        str,
         editor:             str,
-        is_published:       bool,
-        is_private:         bool,
+        isPublished:        bool,
+        isPrivate:          bool,
         locale:             str,
         path:               str,
-        publish_end_date:   'Optional[str]' = None,
-        publish_start_date: 'Optional[str]' = None,
-        script_css:         'Optional[str]' = None,
-        script_js:          'Optional[str]' = None,
+        publishEndDate:     'Optional[str]' = None,
+        publishStartDate:   'Optional[str]' = None,
+        scriptCss:          'Optional[str]' = None,
+        scriptJs:           'Optional[str]' = None,
         tags:               'List[str]' = [],
     ) -> 'Dict[str, Any]':
         mutation = '''
@@ -176,10 +176,10 @@ class PageMixin(WikiJsProtocol):
 
         params = dict(
             title=title, content=content, description=description,
-            editor=editor, isPublished=is_published, isPrivate=is_private,
-            locale=locale, path=path, publishEndDate=publish_end_date,
-            publishStartDate=publish_start_date, scriptCss=script_css,
-            scriptJs=script_js, tags=tags,
+            editor=editor, isPublished=isPublished, isPrivate=isPrivate,
+            locale=locale, path=path, publishEndDate=publishEndDate,
+            publishStartDate=publishStartDate, scriptCss=scriptCss,
+            scriptJs=scriptJs, tags=tags,
         )
 
         resp = self.execute(mutation, params)['pages']['create']
@@ -193,14 +193,14 @@ class PageMixin(WikiJsProtocol):
         content:            'Unforced[str]' = unset,
         description:        'Unforced[str]' = unset,
         editor:             'Unforced[str]' = unset,
-        is_published:       'Unforced[bool]' = unset,
-        is_private:         'Unforced[bool]' = unset,
+        isPublished:        'Unforced[bool]' = unset,
+        isPrivate:          'Unforced[bool]' = unset,
         locale:             'Unforced[str]' = unset,
         path:               'Unforced[str]' = unset,
-        publish_end_date:   'Nullable[str]' = unset,
-        publish_start_date: 'Nullable[str]' = unset,
-        script_css:         'Nullable[str]' = unset,
-        script_js:          'Nullable[str]' = unset,
+        publishEndDate:     'Nullable[str]' = unset,
+        publishStartDate:   'Nullable[str]' = unset,
+        scriptCss:          'Nullable[str]' = unset,
+        scriptJs:           'Nullable[str]' = unset,
         tags:               'Unforced[List[str]]' = unset,
     ) -> 'Dict[str, Any]':
         mutation = '''
@@ -255,10 +255,10 @@ class PageMixin(WikiJsProtocol):
 
         params = dict(
             id=int(id), title=title, content=content, description=description,
-            editor=editor, isPublished=is_published, isPrivate=is_private,
-            locale=locale, path=path, publishEndDate=publish_end_date,
-            publishStartDate=publish_start_date, scriptCss=script_css,
-            scriptJs=script_js, tags=tags,
+            editor=editor, isPublished=isPublished, isPrivate=isPrivate,
+            locale=locale, path=path, publishEndDate=publishEndDate,
+            publishStartDate=publishStartDate, scriptCss=scriptCss,
+            scriptJs=scriptJs, tags=tags,
         )
 
         if any(v is unset for v in params.values()):
